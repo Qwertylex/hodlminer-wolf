@@ -113,6 +113,13 @@ AC_CHECK_LIB([pthread], [pthread_create], PTHREAD_LIBS="-lpthread",
       AC_CHECK_LIB([pthreadGC], [pthread_create], PTHREAD_LIBS="-lpthreadGC"
 ))))
 
+AC_ARG_WITH([build_number],
+    [AC_HELP_STRING([--with-build-number], [Specify a build number.])],
+    [BUILD_NUMBER="$withval"]
+    )
+AC_SUBST([BUILD_NUMBER])
+AM_CONDITIONAL([USE_BUILD_NUMBER], [test x$BUILD_NUMBER != x])
+
 AM_CONDITIONAL([WANT_JANSSON], [test x$request_jansson = xtrue])
 AM_CONDITIONAL([HAVE_WINDOWS], [test x$have_win32 = xtrue])
 AM_CONDITIONAL([USE_ASM], [test x$enable_assembly != xno])

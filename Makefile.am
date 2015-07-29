@@ -23,3 +23,7 @@ hodlminer_SOURCES	= elist.h miner.h compat.h \
 hodlminer_LDFLAGS	= $(PTHREAD_FLAGS)
 hodlminer_LDADD		= @LIBCURL_LIBS@ @OPENSSL_LIBS@ @JANSSON_LIBS@ @PTHREAD_LIBS@ @WS2_LIBS@ -lssl -lcrypto
 hodlminer_CPPFLAGS	= @LIBCURL_CPPFLAGS@
+
+if USE_BUILD_NUMBER
+hodlminer_CFLAGS	= -DBUILD_NUMBER=\"$(BUILD_NUMBER)\"
+endif
