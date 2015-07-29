@@ -21,5 +21,5 @@ hodlminer_SOURCES	= elist.h miner.h compat.h \
 		  	  sha2.c cpu-miner.c util.c hodl.c aes.c
 
 hodlminer_LDFLAGS	= $(PTHREAD_FLAGS)
-hodlminer_LDADD		= @LIBCURL@ @JANSSON_LIBS@ @PTHREAD_LIBS@ @WS2_LIBS@ -lssl -lcrypto
+hodlminer_LDADD		= @LIBCURL_LIBS@ @JANSSON_LIBS@ @PTHREAD_LIBS@ @WS2_LIBS@ -lssl -lcrypto
 hodlminer_CPPFLAGS	= @LIBCURL_CPPFLAGS@
