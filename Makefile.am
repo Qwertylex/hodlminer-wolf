@@ -1,5 +1,3 @@
-CC = gcc
-AM_CFLAGS = -Wall
 
 if WANT_JANSSON
 JANSSON_INCLUDES= -I$(top_srcdir)/compat/jansson
@@ -11,7 +9,7 @@ EXTRA_DIST	= example-cfg.json nomacro.pl
 
 SUBDIRS		= compat
 
-AM_CFLAGS 	+= $(PTHREAD_FLAGS) -march=native -Ofast -flto -fuse-linker-plugin -std=gnu11 $(JANSSON_INCLUDES)
+INCLUDES	= $(PTHREAD_FLAGS) -march=native -Ofast -flto -fuse-linker-plugin -std=gnu11 $(JANSSON_INCLUDES)
 
 bin_PROGRAMS	= hodlminer
 
