@@ -2,6 +2,7 @@ AC_INIT([cpuminer], [2.4.3])
 
 AC_PREREQ([2.59c])
 AC_CANONICAL_SYSTEM
+AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([cpu-miner.c])
 AM_INIT_AUTOMAKE([gnu subdir-objects])
 AC_CONFIG_HEADERS([cpuminer-config.h])
@@ -15,7 +16,7 @@ AC_PROG_CC_C99
 AC_PROG_GCC_TRADITIONAL
 AM_PROG_CC_C_O
 AM_PROG_AS
-AC_PROG_RANLIB
+LT_INIT([disable-shared])
 
 dnl Checks for header files
 AC_HEADER_STDC
