@@ -1,4 +1,5 @@
 #include <string.h>
+#include <openssl/aes.h>
 #include <openssl/evp.h>
 #include <openssl/sha.h>
 #include <x86intrin.h>
@@ -56,8 +57,17 @@ int scanhash_hodl(int threadNumber, int totalThreads, uint32_t *pdata, CacheEntr
 			// Key is last 32b of TmpXOR
 			// IV is last 16b of TmpXOR
 			
-			ExpandAESKey256(ExpKey, TmpXOR.dqwords + (GARBAGE_SLICE_SIZE / sizeof(__m128i)) - 2);
-			AES256CBC(Cache.dqwords, TmpXOR.dqwords, ExpKey, TmpXOR.dqwords[(GARBAGE_SLICE_SIZE / sizeof(__m128i)) - 1], 256);                     
+			if (aes_ni_supported) {
+				ExpandAESKey256(ExpKey, TmpXOR.dqwords + (GARBAGE_SLICE_SIZE / sizeof(__m128i)) - 2);
+				AES256CBC(Cache.dqwords, TmpXOR.dqwords, ExpKey, TmpXOR.dqwords[(GARBAGE_SLICE_SIZE / sizeof(__m128i)) - 1], 256);
+			} else {
+				EVP_CIPHER_CTX ctx;
+				int outlen1;
+				EVP_EncryptInit(&ctx, EVP_aes_256_cbc(), (const unsigned char *)(TmpXOR.dqwords + (GARBAGE_SLICE_SIZE / sizeof(__m128i)) - 2), (const unsigned char *)(TmpXOR.dqwords + ((GARBAGE_SLICE_SIZE / sizeof(__m128i)) - 1)));
+				EVP_EncryptUpdate(&ctx, (unsigned char *)Cache.dqwords, &outlen1,  (const unsigned char *)TmpXOR.dqwords, GARBAGE_SLICE_SIZE);
+				//EVP_EncryptFinal(&ctx, &Cache.dqwords + outlen1, &outlen2);
+				EVP_CIPHER_CTX_cleanup(&ctx);
+			}
 		}
 		
 		// use last X bits as solution
