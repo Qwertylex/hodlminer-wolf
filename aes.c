@@ -1,4 +1,5 @@
 #include <stdint.h>
+#if defined(__AES__)
 #include <x86intrin.h>
 
 static inline void ExpandAESKey256_sub1(__m128i *tmp1, __m128i *tmp2)
@@ -101,3 +102,4 @@ void AES256CBC(__m128i *Ciphertext, const __m128i *Plaintext, const __m128i *Exp
 		Ciphertext[i] = State;
 	}
 }
+#endif

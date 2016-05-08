@@ -43,7 +43,6 @@ int scanhash_hodl(int threadNumber, int totalThreads, uint32_t *pdata, CacheEntr
 		for(int j = 0; j < AES_ITERATIONS; j++)
 		{
 			CacheEntry TmpXOR;
-			__m128i ExpKey[16];
 			
 			// use last 4 bytes of first cache as next location
 			uint32_t nextLocation = Cache.dwords[(GARBAGE_SLICE_SIZE >> 2) - 1] & (COMPARE_SIZE - 1); //% COMPARE_SIZE;
@@ -57,10 +56,14 @@ int scanhash_hodl(int threadNumber, int totalThreads, uint32_t *pdata, CacheEntr
 			// Key is last 32b of TmpXOR
 			// IV is last 16b of TmpXOR
 			
+#if defined(__AES__)
 			if (aes_ni_supported) {
+				__m128i ExpKey[16];
 				ExpandAESKey256(ExpKey, TmpXOR.dqwords + (GARBAGE_SLICE_SIZE / sizeof(__m128i)) - 2);
 				AES256CBC(Cache.dqwords, TmpXOR.dqwords, ExpKey, TmpXOR.dqwords[(GARBAGE_SLICE_SIZE / sizeof(__m128i)) - 1], 256);
-			} else {
+			} else
+#endif
+			{
 				EVP_CIPHER_CTX ctx;
 				int outlen1;
 				EVP_EncryptInit(&ctx, EVP_aes_256_cbc(), (const unsigned char *)(TmpXOR.dqwords + (GARBAGE_SLICE_SIZE / sizeof(__m128i)) - 2), (const unsigned char *)(TmpXOR.dqwords + ((GARBAGE_SLICE_SIZE / sizeof(__m128i)) - 1)));
