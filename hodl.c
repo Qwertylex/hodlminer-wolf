@@ -96,6 +96,8 @@ int scanhash_hodl(int threadNumber, int totalThreads, uint32_t *pdata, CacheEntr
 			{
 				pdata[20] = swab32(BlockHdr[20]);
 				pdata[21] = swab32(BlockHdr[21]);
+applog(LOG_WARNING, "DATA: %s\n", abin2hex((const unsigned char *)pdata, 88));
+applog(LOG_WARNING, "HASH: %s\n", abin2hex((const unsigned char *)FinalPoW, 32));
 				*hashes_done = CollisionCount;
 				return(1);
 			}
