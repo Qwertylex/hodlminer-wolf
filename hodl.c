@@ -64,12 +64,12 @@ int scanhash_hodl(int threadNumber, int totalThreads, uint32_t *pdata, CacheEntr
 			} else
 #endif
 			{
-				EVP_CIPHER_CTX ctx;
+				EVP_CIPHER_CTX *ctx;
 				int outlen1;
-				EVP_EncryptInit(&ctx, EVP_aes_256_cbc(), (const unsigned char *)(TmpXOR.dqwords + (GARBAGE_SLICE_SIZE / sizeof(__m128i)) - 2), (const unsigned char *)(TmpXOR.dqwords + ((GARBAGE_SLICE_SIZE / sizeof(__m128i)) - 1)));
-				EVP_EncryptUpdate(&ctx, (unsigned char *)Cache.dqwords, &outlen1,  (const unsigned char *)TmpXOR.dqwords, GARBAGE_SLICE_SIZE);
+				EVP_EncryptInit(ctx, EVP_aes_256_cbc(), (const unsigned char *)(TmpXOR.dqwords + (GARBAGE_SLICE_SIZE / sizeof(__m128i)) - 2), (const unsigned char *)(TmpXOR.dqwords + ((GARBAGE_SLICE_SIZE / sizeof(__m128i)) - 1)));
+				EVP_EncryptUpdate(ctx, (unsigned char *)Cache.dqwords, &outlen1,  (const unsigned char *)TmpXOR.dqwords, GARBAGE_SLICE_SIZE);
 				//EVP_EncryptFinal(&ctx, &Cache.dqwords + outlen1, &outlen2);
-				EVP_CIPHER_CTX_cleanup(&ctx);
+				EVP_CIPHER_CTX_cleanup(ctx);
 			}
 		}
 		
